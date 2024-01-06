@@ -16,6 +16,7 @@ class NoteList extends StatelessWidget {
           leading: const CircleAvatar(),
           title: Text(notes[index].title),
           subtitle: Text(notes[index].description),
+          trailing: const Icon(Icons.star_border),
         ),
       ),
     );
