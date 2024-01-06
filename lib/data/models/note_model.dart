@@ -19,4 +19,12 @@ class NoteModel extends Note {
 
     return NoteModel(id: id, title: title, description: description);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      if (id != null) 'id': id
+    };
+  }
 }
