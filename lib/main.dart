@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:notecraft/di/injector.dart';
+import 'package:notecraft/presentation/views/home_page.dart';
+import 'package:notecraft/utils/theme/note_theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(const MainApp());
 }
 
@@ -9,12 +14,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      theme: FlutterNoteTheme.light,
+      darkTheme: FlutterNoteTheme.dark,
+      home: const HomePage(),
     );
   }
 }
