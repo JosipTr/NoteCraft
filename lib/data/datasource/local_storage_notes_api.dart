@@ -23,4 +23,11 @@ class LocalStorageNotesApi implements NotesApi {
             description:
                 "sdfaasdfasdfasdfasdfasdfasdlkjgbadfpjbaedpigrnaeršoignaerpiognaerpoignaeroigpn"));
   }
+
+  @override
+  Future<void> deleteNote(int id) async {
+    await (_appDatabase.delete(_appDatabase.noteItems)
+          ..where((tbl) => tbl.id.equals(id)))
+        .go();
+  }
 }

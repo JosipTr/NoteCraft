@@ -13,6 +13,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   NoteBloc(this._notesRepository) : super(NoteInitial()) {
     on<NoteGetRequested>(_onNoteGetRequested);
     on<NoteAdded>(_onNoteAdded);
+    on<NoteDeleted>(_onNoteDeleted);
   }
 
   Future<void> _onNoteGetRequested(
@@ -24,5 +25,10 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Future<void> _onNoteAdded(NoteAdded event, Emitter<NoteState> emit) async {
     await _notesRepository.addNote();
+  }
+
+  Future<void> _onNoteDeleted(
+      NoteDeleted event, Emitter<NoteState> emit) async {
+    await _notesRepository.deleteNote(event.id);
   }
 }

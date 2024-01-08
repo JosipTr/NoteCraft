@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notecraft/presentation/bloc/note_bloc.dart';
 
 import '../../domain/entities/note.dart';
 
@@ -13,10 +15,17 @@ class NoteList extends StatelessWidget {
       itemCount: notes.length,
       itemBuilder: (context, index) => Card(
         child: ListTile(
-          leading: const CircleAvatar(),
+          leading: CircleAvatar(
+            child: Text(
+              notes[index].id.toString(),
+            ),
+          ),
           title: Text(notes[index].title),
           subtitle: Text(notes[index].description),
           trailing: const Icon(Icons.star_border),
+          onLongPress: () => context
+              .read<NoteBloc>()
+              .add(NoteDeleted(notes[index].id!)), //Always has id from db
         ),
       ),
     );
