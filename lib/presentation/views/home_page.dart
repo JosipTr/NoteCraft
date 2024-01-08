@@ -4,6 +4,8 @@ import 'package:notecraft/di/injector.dart';
 import 'package:notecraft/presentation/widgets/note_list.dart';
 
 import '../bloc/note_bloc.dart';
+import '../widgets/note_failure.dart';
+import '../widgets/note_list_empty.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -33,9 +35,18 @@ class HomeView extends StatelessWidget {
         body: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
             if (state is NoteLoadSuccess) {
+              if (state.notes.isEmpty) return const NoteListEmpty();
               return NoteList(notes: state.notes);
             }
-            return const Text("no");
+            if (state is NoteLoadFailure) {
+              return const NoteFailure();
+            }
+            if (state is NoteLoadInProgress) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return const Text("Else");
           },
         ));
   }
