@@ -15,11 +15,6 @@ class NoteList extends StatelessWidget {
       itemCount: notes.length,
       itemBuilder: (context, index) => Card(
         child: ListTile(
-          leading: CircleAvatar(
-            child: Text(
-              notes[index].id.toString(),
-            ),
-          ),
           title: Text(notes[index].title),
           subtitle: Text(notes[index].description),
           trailing: const Icon(Icons.star_border),
