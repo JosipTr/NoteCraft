@@ -22,8 +22,7 @@ class $NoteItemsTable extends NoteItems
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 32),
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 32),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   static const VerificationMeta _descriptionMeta =
