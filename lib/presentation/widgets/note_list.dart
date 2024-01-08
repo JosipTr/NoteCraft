@@ -16,7 +16,7 @@ class NoteList extends StatelessWidget {
       itemBuilder: (context, index) => Card(
         child: ListTile(
           title: Text(notes[index].title),
-          subtitle: Text(notes[index].description),
+          subtitle: Text(notes[index].description, maxLines: 1),
           trailing: const Icon(Icons.star_border),
           onLongPress: () => context
               .read<NoteBloc>()

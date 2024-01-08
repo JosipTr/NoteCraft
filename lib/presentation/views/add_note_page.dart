@@ -43,31 +43,42 @@ class AddNoteView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Add new Note"),
       ),
-      body: Container(
-        margin: const EdgeInsets.all(5),
-        child: Column(
-          children: [
-            TextField(
-              controller: titleController,
-              textCapitalization: TextCapitalization.words,
-              autofocus: true,
-              decoration: const InputDecoration(
-                label: Text("Title: "),
-              ),
-            ),
-            Expanded(
-              child: TextField(
-                controller: descriptionController,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(
-                  label: Text("Description: "),
-                  border: InputBorder.none,
+      body: PopScope(
+        onPopInvoked: (didPop) => context.read<NoteBloc>().add(
+              NoteAdded(
+                AddNoteParam(
+                  title: titleController.text.trim(),
+                  description: descriptionController.text.trim(),
                 ),
               ),
             ),
-          ],
+        child: Container(
+          margin: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              TextField(
+                maxLength: 32,
+                controller: titleController,
+                textCapitalization: TextCapitalization.words,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  label: Text("Title: "),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: descriptionController,
+                  maxLength: 255,
+                  keyboardType: TextInputType.multiline,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: const InputDecoration(
+                    label: Text("Description: "),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
