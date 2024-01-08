@@ -2,6 +2,8 @@ import 'package:notecraft/data/models/database.dart';
 import 'package:notecraft/data/models/note_model.dart';
 import 'package:notecraft/data/repositories/notes_api.dart';
 
+import '../models/add_note_param.dart';
+
 class LocalStorageNotesApi implements NotesApi {
   final AppDatabase _appDatabase;
 
@@ -16,12 +18,10 @@ class LocalStorageNotesApi implements NotesApi {
   }
 
   @override
-  Future<void> addNote() async {
+  Future<void> addNote(AddNoteParam params) async {
     await _appDatabase.into(_appDatabase.noteItems).insert(
         NoteItemsCompanion.insert(
-            title: "Hej",
-            description:
-                "sdfaasdfasdfasdfasdfasdfasdlkjgbadfpjbaedpigrnaeršoignaerpiognaerpoignaeroigpn"));
+            title: params.title, description: params.description));
   }
 
   @override

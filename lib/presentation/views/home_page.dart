@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notecraft/di/injector.dart';
+import 'package:notecraft/presentation/views/add_note_page.dart';
 import 'package:notecraft/presentation/widgets/note_list.dart';
 
 import '../bloc/note_bloc.dart';
@@ -30,8 +31,10 @@ class HomeView extends StatelessWidget {
           leading: const Icon(Icons.menu),
         ),
         floatingActionButton: FloatingActionButton(
-            onPressed: () => context.read<NoteBloc>().add(NoteAdded()),
-            child: const Text("Add")),
+          onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AddNotePage())),
+          child: const Text("Add"),
+        ),
         body: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
             if (state is NoteLoadSuccess) {
