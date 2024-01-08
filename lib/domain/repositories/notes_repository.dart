@@ -8,4 +8,5 @@ class NotesRepository {
   const NotesRepository(this._notesApi);
 
   Stream<List<Note>> getNotes() => _notesApi.getNotes();
+  Future<void> addNote() => _notesApi.addNote();
 }

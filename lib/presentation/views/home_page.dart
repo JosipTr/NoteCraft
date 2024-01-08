@@ -27,8 +27,9 @@ class HomeView extends StatelessWidget {
           title: const Text("NoteCraft"),
           leading: const Icon(Icons.menu),
         ),
-        floatingActionButton:
-            const FloatingActionButton(onPressed: null, child: Text("Add")),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => context.read<NoteBloc>().add(NoteAdded()),
+            child: const Text("Add")),
         body: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
             if (state is NoteLoadSuccess) {

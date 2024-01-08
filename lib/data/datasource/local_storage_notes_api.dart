@@ -9,14 +9,18 @@ class LocalStorageNotesApi implements NotesApi {
 
   @override
   Stream<List<NoteModel>> getNotes() {
-    final noteItems = _appDatabase.select(_appDatabase.noteItems).get();
+    return _appDatabase.select(_appDatabase.noteItems).watch().map((noteList) =>
+        noteList
+            .map((noteItem) => NoteModel.fromJson(noteItem.toJson()))
+            .toList());
+  }
 
-    final noteModels = noteItems.then((value) => value
-        .map((noteItem) => NoteModel.fromJson(noteItem.toJson()))
-        .toList());
-
-    final stream = Stream.fromFuture(noteModels);
-
-    return stream;
+  @override
+  Future<void> addNote() async {
+    await _appDatabase.into(_appDatabase.noteItems).insert(
+        NoteItemsCompanion.insert(
+            title: "Hej",
+            description:
+                "sdfaasdfasdfasdfasdfasdfasdlkjgbadfpjbaedpigrnaeršoignaerpiognaerpoignaeroigpn"));
   }
 }

@@ -12,12 +12,17 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   NoteBloc(this._notesRepository) : super(NoteInitial()) {
     on<NoteGetRequested>(_onNoteGetRequested);
+    on<NoteAdded>(_onNoteAdded);
   }
 
   Future<void> _onNoteGetRequested(
       NoteGetRequested event, Emitter<NoteState> emit) async {
-    emit.forEach(_notesRepository.getNotes(),
+    await emit.forEach(_notesRepository.getNotes(),
         onData: (notes) => NoteLoadSuccess(notes),
         onError: (_, __) => NoteLoadFailure());
+  }
+
+  Future<void> _onNoteAdded(NoteAdded event, Emitter<NoteState> emit) async {
+    await _notesRepository.addNote();
   }
 }
