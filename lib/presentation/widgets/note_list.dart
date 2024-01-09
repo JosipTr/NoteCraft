@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notecraft/presentation/bloc/note_bloc.dart';
+import 'package:date_format/date_format.dart';
 
 import '../../domain/entities/note.dart';
 
@@ -16,7 +17,19 @@ class NoteList extends StatelessWidget {
       itemBuilder: (context, index) => Card(
         child: ListTile(
           title: Text(notes[index].title),
-          subtitle: Text(notes[index].description, maxLines: 1),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(notes[index].description, maxLines: 1),
+              Text(
+                formatDate(
+                  DateTime.fromMillisecondsSinceEpoch(notes[index].date),
+                  [dd, '-', mm, '-', yyyy],
+                ),
+                maxLines: 1,
+              ),
+            ],
+          ),
           trailing: const Icon(Icons.star_border),
           onLongPress: () => context
               .read<NoteBloc>()

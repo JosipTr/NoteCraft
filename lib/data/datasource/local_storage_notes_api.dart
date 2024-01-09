@@ -20,8 +20,12 @@ class LocalStorageNotesApi implements NotesApi {
   @override
   Future<void> addNote(AddNoteParam params) async {
     await _appDatabase.into(_appDatabase.noteItems).insert(
-        NoteItemsCompanion.insert(
-            title: params.title, description: params.description));
+          NoteItemsCompanion.insert(
+            title: params.title,
+            description: params.description,
+            date: DateTime.now(),
+          ),
+        );
   }
 
   @override

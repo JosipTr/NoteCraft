@@ -31,8 +31,13 @@ class $NoteItemsTable extends NoteItems
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'body', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
-  List<GeneratedColumn> get $columns => [id, title, description];
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, title, description, date];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -58,6 +63,12 @@ class $NoteItemsTable extends NoteItems
     } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
     return context;
   }
 
@@ -73,6 +84,8 @@ class $NoteItemsTable extends NoteItems
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
     );
   }
 
@@ -86,14 +99,19 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
   final int id;
   final String title;
   final String description;
+  final DateTime date;
   const NoteItem(
-      {required this.id, required this.title, required this.description});
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.date});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
     map['body'] = Variable<String>(description);
+    map['date'] = Variable<DateTime>(date);
     return map;
   }
 
@@ -102,6 +120,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       id: Value(id),
       title: Value(title),
       description: Value(description),
+      date: Value(date),
     );
   }
 
@@ -112,6 +131,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String>(json['description']),
+      date: serializer.fromJson<DateTime>(json['date']),
     );
   }
   @override
@@ -121,68 +141,84 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String>(description),
+      'date': serializer.toJson<DateTime>(date),
     };
   }
 
-  NoteItem copyWith({int? id, String? title, String? description}) => NoteItem(
+  NoteItem copyWith(
+          {int? id, String? title, String? description, DateTime? date}) =>
+      NoteItem(
         id: id ?? this.id,
         title: title ?? this.title,
         description: description ?? this.description,
+        date: date ?? this.date,
       );
   @override
   String toString() {
     return (StringBuffer('NoteItem(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('description: $description')
+          ..write('description: $description, ')
+          ..write('date: $date')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, description);
+  int get hashCode => Object.hash(id, title, description, date);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is NoteItem &&
           other.id == this.id &&
           other.title == this.title &&
-          other.description == this.description);
+          other.description == this.description &&
+          other.date == this.date);
 }
 
 class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
   final Value<int> id;
   final Value<String> title;
   final Value<String> description;
+  final Value<DateTime> date;
   const NoteItemsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
+    this.date = const Value.absent(),
   });
   NoteItemsCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     required String description,
+    required DateTime date,
   })  : title = Value(title),
-        description = Value(description);
+        description = Value(description),
+        date = Value(date);
   static Insertable<NoteItem> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? description,
+    Expression<DateTime>? date,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (description != null) 'body': description,
+      if (date != null) 'date': date,
     });
   }
 
   NoteItemsCompanion copyWith(
-      {Value<int>? id, Value<String>? title, Value<String>? description}) {
+      {Value<int>? id,
+      Value<String>? title,
+      Value<String>? description,
+      Value<DateTime>? date}) {
     return NoteItemsCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
+      date: date ?? this.date,
     );
   }
 
@@ -198,6 +234,9 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
     if (description.present) {
       map['body'] = Variable<String>(description.value);
     }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
     return map;
   }
 
@@ -206,7 +245,8 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
     return (StringBuffer('NoteItemsCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('description: $description')
+          ..write('description: $description, ')
+          ..write('date: $date')
           ..write(')'))
         .toString();
   }
@@ -220,4 +260,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [noteItems];
+  @override
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
 }

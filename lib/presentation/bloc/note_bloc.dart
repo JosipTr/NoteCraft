@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:notecraft/data/models/add_note_param.dart';
@@ -21,7 +23,11 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       NoteGetRequested event, Emitter<NoteState> emit) async {
     await emit.forEach(_notesRepository.getNotes(),
         onData: (notes) => NoteLoadSuccess(notes),
-        onError: (_, __) => NoteLoadFailure());
+        onError: (error, stackTrace) {
+          log(error.toString());
+          log(stackTrace.toString());
+          return NoteLoadFailure();
+        });
   }
 
   Future<void> _onNoteAdded(NoteAdded event, Emitter<NoteState> emit) async {

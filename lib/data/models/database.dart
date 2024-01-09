@@ -14,6 +14,7 @@ class NoteItems extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text().withLength(max: 32)();
   TextColumn get description => text().named('body')();
+  DateTimeColumn get date => dateTime()();
 }
 
 @DriftDatabase(tables: [NoteItems])
