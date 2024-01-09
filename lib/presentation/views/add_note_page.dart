@@ -27,17 +27,7 @@ class AddNoteView extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<NoteBloc>().add(
-                NoteAdded(
-                  AddNoteParam(
-                    title: titleController.text.trim(),
-                    description: descriptionController.text.trim(),
-                  ),
-                ),
-              );
-          Navigator.pop(context);
-        },
+        onPressed: () => Navigator.pop(context),
         child: const Text("Save"),
       ),
       appBar: AppBar(
