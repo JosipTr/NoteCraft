@@ -45,15 +45,16 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Future<void> _onNoteFavoriteToggled(
       NoteFavoriteToggled event, Emitter<NoteState> emit) async {
-    if (state is NoteLoadSuccess) {
-      final List<Note> updatedNotes = (state as NoteLoadSuccess)
-          .notes
-          .map((note) => note.id == event.id
-              ? note.copyWith(isFavorite: !note.isFavorite)
-              : note)
-          .toList();
-      emit(NoteLoadSuccess(updatedNotes));
-    }
+    // if (state is NoteLoadSuccess) {
+    //   final List<Note> updatedNotes = (state as NoteLoadSuccess)
+    //       .notes
+    //       .map((note) => note.id == event.id
+    //           ? note.copyWith(isFavorite: !note.isFavorite)
+    //           : note)
+    //       .toList();
+    //   emit(NoteLoadSuccess(updatedNotes));
+    // }
+    await _notesRepository.toggleFavorite(event.id);
   }
 
   Future<void> _onNoteSelectToggled(

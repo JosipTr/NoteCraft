@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:notecraft/data/models/database.dart';
 import 'package:notecraft/data/models/note_model.dart';
 import 'package:notecraft/data/repositories/notes_api.dart';
@@ -33,5 +34,16 @@ class LocalStorageNotesApi implements NotesApi {
     await (_appDatabase.delete(_appDatabase.noteItems)
           ..where((tbl) => tbl.id.equals(id)))
         .go();
+  }
+
+  @override
+  Future<void> toggleFavorite(int id) async {
+    final note = await (_appDatabase.select(_appDatabase.noteItems)
+          ..where((tbl) => tbl.id.equals(id)))
+        .getSingle();
+
+    await (_appDatabase.update(_appDatabase.noteItems)
+          ..where((tbl) => tbl.id.equals(id)))
+        .write(NoteItemsCompanion(favorite: Value(!note.favorite)));
   }
 }

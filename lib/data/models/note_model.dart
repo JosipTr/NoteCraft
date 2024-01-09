@@ -1,11 +1,14 @@
 import 'package:notecraft/domain/entities/note.dart';
 
 class NoteModel extends Note {
-  const NoteModel(
-      {super.id,
-      required super.title,
-      required super.description,
-      required super.date});
+  const NoteModel({
+    super.id,
+    required super.title,
+    required super.description,
+    required super.date,
+    super.isSelected,
+    super.isFavorite,
+  });
 
   factory NoteModel.fromJson(Map<String, dynamic> data) {
     final title = data['title'];
@@ -25,10 +28,21 @@ class NoteModel extends Note {
           'Invalid JSON: required "date" field of type String in $data');
     }
 
+    final isFavorite = data['favorite'];
+    if (isFavorite is! bool) {
+      throw FormatException(
+          'Invalid JSON: required "isFavorite" field of type bool in $data');
+    }
+
     final id = data['id'] as int?;
 
     return NoteModel(
-        id: id, title: title, description: description, date: date);
+        id: id,
+        title: title,
+        description: description,
+        date: date,
+        isFavorite: isFavorite,
+        isSelected: false);
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +50,7 @@ class NoteModel extends Note {
       'title': title,
       'description': description,
       'date': date,
+      'favorite': isFavorite,
       if (id != null) 'id': id
     };
   }

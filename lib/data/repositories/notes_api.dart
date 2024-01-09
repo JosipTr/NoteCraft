@@ -5,4 +5,5 @@ abstract interface class NotesApi {
   Stream<List<NoteModel>> getNotes();
   Future<void> addNote(AddNoteParam params);
   Future<void> deleteNote(int id);
+  Future<void> toggleFavorite(int id);
 }

@@ -15,6 +15,7 @@ class NoteItems extends Table {
   TextColumn get title => text().withLength(max: 32)();
   TextColumn get description => text().named('body')();
   DateTimeColumn get date => dateTime()();
+  BoolColumn get favorite => boolean().withDefault(const Constant(false))();
 }
 
 @DriftDatabase(tables: [NoteItems])

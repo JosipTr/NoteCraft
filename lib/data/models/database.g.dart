@@ -36,8 +36,19 @@ class $NoteItemsTable extends NoteItems
   late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
       'date', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _favoriteMeta =
+      const VerificationMeta('favorite');
   @override
-  List<GeneratedColumn> get $columns => [id, title, description, date];
+  late final GeneratedColumn<bool> favorite = GeneratedColumn<bool>(
+      'favorite', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("favorite" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, title, description, date, favorite];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -69,6 +80,10 @@ class $NoteItemsTable extends NoteItems
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
+    if (data.containsKey('favorite')) {
+      context.handle(_favoriteMeta,
+          favorite.isAcceptableOrUnknown(data['favorite']!, _favoriteMeta));
+    }
     return context;
   }
 
@@ -86,6 +101,8 @@ class $NoteItemsTable extends NoteItems
           .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
       date: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      favorite: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}favorite'])!,
     );
   }
 
@@ -100,11 +117,13 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
   final String title;
   final String description;
   final DateTime date;
+  final bool favorite;
   const NoteItem(
       {required this.id,
       required this.title,
       required this.description,
-      required this.date});
+      required this.date,
+      required this.favorite});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -112,6 +131,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
     map['title'] = Variable<String>(title);
     map['body'] = Variable<String>(description);
     map['date'] = Variable<DateTime>(date);
+    map['favorite'] = Variable<bool>(favorite);
     return map;
   }
 
@@ -121,6 +141,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       title: Value(title),
       description: Value(description),
       date: Value(date),
+      favorite: Value(favorite),
     );
   }
 
@@ -132,6 +153,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String>(json['description']),
       date: serializer.fromJson<DateTime>(json['date']),
+      favorite: serializer.fromJson<bool>(json['favorite']),
     );
   }
   @override
@@ -142,16 +164,22 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String>(description),
       'date': serializer.toJson<DateTime>(date),
+      'favorite': serializer.toJson<bool>(favorite),
     };
   }
 
   NoteItem copyWith(
-          {int? id, String? title, String? description, DateTime? date}) =>
+          {int? id,
+          String? title,
+          String? description,
+          DateTime? date,
+          bool? favorite}) =>
       NoteItem(
         id: id ?? this.id,
         title: title ?? this.title,
         description: description ?? this.description,
         date: date ?? this.date,
+        favorite: favorite ?? this.favorite,
       );
   @override
   String toString() {
@@ -159,13 +187,14 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
-          ..write('date: $date')
+          ..write('date: $date, ')
+          ..write('favorite: $favorite')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, description, date);
+  int get hashCode => Object.hash(id, title, description, date, favorite);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -173,7 +202,8 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
           other.id == this.id &&
           other.title == this.title &&
           other.description == this.description &&
-          other.date == this.date);
+          other.date == this.date &&
+          other.favorite == this.favorite);
 }
 
 class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
@@ -181,17 +211,20 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
   final Value<String> title;
   final Value<String> description;
   final Value<DateTime> date;
+  final Value<bool> favorite;
   const NoteItemsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
     this.date = const Value.absent(),
+    this.favorite = const Value.absent(),
   });
   NoteItemsCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     required String description,
     required DateTime date,
+    this.favorite = const Value.absent(),
   })  : title = Value(title),
         description = Value(description),
         date = Value(date);
@@ -200,12 +233,14 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
     Expression<String>? title,
     Expression<String>? description,
     Expression<DateTime>? date,
+    Expression<bool>? favorite,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (description != null) 'body': description,
       if (date != null) 'date': date,
+      if (favorite != null) 'favorite': favorite,
     });
   }
 
@@ -213,12 +248,14 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
       {Value<int>? id,
       Value<String>? title,
       Value<String>? description,
-      Value<DateTime>? date}) {
+      Value<DateTime>? date,
+      Value<bool>? favorite}) {
     return NoteItemsCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       date: date ?? this.date,
+      favorite: favorite ?? this.favorite,
     );
   }
 
@@ -237,6 +274,9 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
     }
+    if (favorite.present) {
+      map['favorite'] = Variable<bool>(favorite.value);
+    }
     return map;
   }
 
@@ -246,7 +286,8 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
-          ..write('date: $date')
+          ..write('date: $date, ')
+          ..write('favorite: $favorite')
           ..write(')'))
         .toString();
   }
