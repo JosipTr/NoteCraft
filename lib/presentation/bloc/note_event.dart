@@ -26,3 +26,21 @@ final class NoteDeleted extends NoteEvent {
   @override
   List<Object> get props => [id];
 }
+
+class NoteFavoriteToggled extends NoteEvent {
+  final int id;
+
+  const NoteFavoriteToggled(this.id);
+
+  @override
+  List<Object> get props => [id];
+}
+
+class NoteSelectToggled extends NoteEvent {
+  final int id;
+
+  const NoteSelectToggled(this.id);
+
+  @override
+  List<Object> get props => [id];
+}

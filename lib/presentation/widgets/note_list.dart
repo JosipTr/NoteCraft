@@ -15,6 +15,7 @@ class NoteList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: notes.length,
       itemBuilder: (context, index) => Card(
+        color: notes[index].isSelected ? Colors.blueGrey : null,
         child: ListTile(
           title: Text(notes[index].title),
           subtitle: Column(
@@ -30,10 +31,22 @@ class NoteList extends StatelessWidget {
               ),
             ],
           ),
-          trailing: const Icon(Icons.star_border),
-          onLongPress: () => context
-              .read<NoteBloc>()
-              .add(NoteDeleted(notes[index].id!)), //Always has id from db
+          trailing: notes[index].isFavorite
+              ? IconButton(
+                  onPressed: () => context.read<NoteBloc>().add(
+                        NoteFavoriteToggled(notes[index].id!),
+                      ),
+                  icon: const Icon(Icons.star),
+                )
+              : IconButton(
+                  onPressed: () => context.read<NoteBloc>().add(
+                        NoteFavoriteToggled(notes[index].id!),
+                      ),
+                  icon: const Icon(Icons.star_border),
+                ),
+          onLongPress: () => context.read<NoteBloc>().add(
+                NoteSelectToggled(notes[index].id!),
+              ), //Always has id from db
         ),
       ),
     );

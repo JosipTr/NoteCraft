@@ -17,12 +17,15 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     on<NoteGetRequested>(_onNoteGetRequested);
     on<NoteAdded>(_onNoteAdded);
     on<NoteDeleted>(_onNoteDeleted);
+    on<NoteFavoriteToggled>(_onNoteFavoriteToggled);
+    on<NoteSelectToggled>(_onNoteSelectToggled);
   }
 
   Future<void> _onNoteGetRequested(
       NoteGetRequested event, Emitter<NoteState> emit) async {
     await emit.forEach(_notesRepository.getNotes(),
-        onData: (notes) => NoteLoadSuccess(notes),
+        onData: (notes) => NoteLoadSuccess(
+            notes.map((note) => note.copyWith(isSelected: false)).toList()),
         onError: (error, stackTrace) {
           log(error.toString());
           log(stackTrace.toString());
@@ -38,5 +41,31 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Future<void> _onNoteDeleted(
       NoteDeleted event, Emitter<NoteState> emit) async {
     await _notesRepository.deleteNote(event.id);
+  }
+
+  Future<void> _onNoteFavoriteToggled(
+      NoteFavoriteToggled event, Emitter<NoteState> emit) async {
+    if (state is NoteLoadSuccess) {
+      final List<Note> updatedNotes = (state as NoteLoadSuccess)
+          .notes
+          .map((note) => note.id == event.id
+              ? note.copyWith(isFavorite: !note.isFavorite)
+              : note)
+          .toList();
+      emit(NoteLoadSuccess(updatedNotes));
+    }
+  }
+
+  Future<void> _onNoteSelectToggled(
+      NoteSelectToggled event, Emitter<NoteState> emit) async {
+    if (state is NoteLoadSuccess) {
+      final List<Note> updatedNotes = (state as NoteLoadSuccess)
+          .notes
+          .map((note) => note.id == event.id
+              ? note.copyWith(isSelected: !note.isSelected)
+              : note)
+          .toList();
+      emit(NoteLoadSuccess(updatedNotes));
+    }
   }
 }
