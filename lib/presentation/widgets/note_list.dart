@@ -26,7 +26,7 @@ class NoteList extends StatelessWidget {
               Text(
                 formatDate(
                   DateTime.fromMillisecondsSinceEpoch(notes[index].date),
-                  [dd, '-', mm, '-', yyyy],
+                  [dd, '-', mm, '-', yyyy, ' ', hh, ":", nn, ":", ss],
                 ),
                 maxLines: 1,
               ),
