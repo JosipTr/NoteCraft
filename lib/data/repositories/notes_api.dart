@@ -6,4 +6,5 @@ abstract interface class NotesApi {
   Future<void> addNote(AddNoteParam params);
   Future<void> deleteNote(int id);
   Future<void> toggleFavorite(int id);
+  Future<void> updateNote(NoteModel noteModel);
 }

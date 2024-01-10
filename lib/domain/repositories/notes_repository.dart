@@ -1,6 +1,6 @@
-import 'package:notecraft/data/models/add_note_param.dart';
 import 'package:notecraft/data/repositories/notes_api.dart';
 
+import '../../data/models/models.dart';
 import '../entities/note.dart';
 
 class NotesRepository {
@@ -12,4 +12,6 @@ class NotesRepository {
   Future<void> addNote(AddNoteParam param) => _notesApi.addNote(param);
   Future<void> deleteNote(int id) => _notesApi.deleteNote(id);
   Future<void> toggleFavorite(int id) => _notesApi.toggleFavorite(id);
+  Future<void> updateNote(Note note) =>
+      _notesApi.updateNote(NoteModel.fromNote(note));
 }

@@ -54,4 +54,14 @@ class NoteModel extends Note {
       if (id != null) 'id': id
     };
   }
+
+  factory NoteModel.fromNote(Note note) {
+    return NoteModel(
+        id: note.id,
+        title: note.title,
+        description: note.description,
+        date: note.date,
+        isFavorite: note.isFavorite,
+        isSelected: note.isSelected);
+  }
 }

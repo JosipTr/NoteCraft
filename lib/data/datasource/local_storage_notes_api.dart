@@ -46,4 +46,19 @@ class LocalStorageNotesApi implements NotesApi {
           ..where((tbl) => tbl.id.equals(id)))
         .write(NoteItemsCompanion(favorite: Value(!note.favorite)));
   }
+
+  @override
+  Future<void> updateNote(NoteModel noteModel) async {
+    await (_appDatabase.update(_appDatabase.noteItems)
+          ..where((tbl) => tbl.id.equals(noteModel.id!)))
+        .write(
+      NoteItemsCompanion(
+        id: Value(noteModel.id!),
+        title: Value(noteModel.title),
+        description: Value(noteModel.description),
+        date: Value(DateTime.now()),
+        favorite: Value(noteModel.isFavorite),
+      ),
+    );
+  }
 }
