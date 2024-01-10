@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:notecraft/data/models/add_note_param.dart';
 import 'package:notecraft/domain/repositories/notes_repository.dart';
 
+import '../../data/models/models.dart';
 import '../../domain/entities/note.dart';
 
 part 'note_event.dart';
@@ -52,6 +52,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Future<void> _onNoteUpdated(
       NoteUpdated event, Emitter<NoteState> emit) async {
+    if (event.title.isEmpty && event.description.isEmpty) return;
     final note =
         event.note.copyWith(title: event.title, description: event.description);
     await _notesRepository.updateNote(note);
