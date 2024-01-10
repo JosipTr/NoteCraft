@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notecraft/di/injector.dart';
 import 'package:notecraft/presentation/views/add_note_page.dart';
-import 'package:notecraft/presentation/widgets/note_list.dart';
 
 import '../bloc/note_bloc.dart';
-import '../widgets/note_failure.dart';
-import '../widgets/note_list_empty.dart';
+import '../widgets/widgets.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -26,9 +24,9 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: const Menu(),
         appBar: AppBar(
-          title: const Text("NoteCraft"),
-          leading: const Icon(Icons.menu),
+          title: const Text("Notes"),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context).push(
