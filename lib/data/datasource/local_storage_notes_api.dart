@@ -68,6 +68,7 @@ class LocalStorageNotesApi implements NotesApi {
 
     await (_appDatabase.update(_appDatabase.noteItems)
           ..where((tbl) => tbl.id.equals(id)))
-        .write(NoteItemsCompanion(deleted: Value(!note.deleted)));
+        .write(NoteItemsCompanion(
+            deleted: Value(!note.deleted), favorite: const Value(false)));
   }
 }

@@ -91,7 +91,8 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
               ? note.copyWith(isSelected: !note.isSelected)
               : note)
           .toList();
-      emit(NoteLoadSuccess(updatedNotes, NoteFilter.notes));
+      emit(
+          NoteLoadSuccess(updatedNotes, (state as NoteLoadSuccess).noteFilter));
     }
   }
 }

@@ -8,7 +8,8 @@ import '../views/add_note_page.dart';
 
 class NoteList extends StatelessWidget {
   final List<Note> notes;
-  const NoteList({required this.notes, super.key});
+  final NoteFilter noteFilter;
+  const NoteList({required this.notes, required this.noteFilter, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,26 +33,15 @@ class NoteList extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: notes[index].isSelected
-                ? IconButton(
-                    onPressed: () => context.read<NoteBloc>().add(
-                          NoteDeleteToggled(notes[index].id!),
-                        ),
-                    icon: const Icon(Icons.delete),
+            trailing: noteFilter == NoteFilter.notes ||
+                    noteFilter == NoteFilter.favorite
+                ? NoteIconButton(
+                    note: notes[index],
                   )
-                : notes[index].isFavorite
-                    ? IconButton(
-                        onPressed: () => context.read<NoteBloc>().add(
-                              NoteFavoriteToggled(notes[index].id!),
-                            ),
-                        icon: const Icon(Icons.star),
-                      )
-                    : IconButton(
-                        onPressed: () => context.read<NoteBloc>().add(
-                              NoteFavoriteToggled(notes[index].id!),
-                            ),
-                        icon: const Icon(Icons.star_border),
-                      ),
+                : NoteTrashIconButton(
+                    notes: notes,
+                    index: index,
+                  ),
             onLongPress: () => context.read<NoteBloc>().add(
                   NoteSelectToggled(notes[index].id!),
                 ),
@@ -81,5 +71,58 @@ class NoteList extends StatelessWidget {
             ),
       ),
     );
+  }
+}
+
+class NoteIconButton extends StatelessWidget {
+  final Note note;
+  const NoteIconButton({required this.note, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return note.isSelected
+        ? IconButton(
+            onPressed: () => context.read<NoteBloc>().add(
+                  NoteDeleteToggled(note.id!),
+                ),
+            icon: const Icon(Icons.delete),
+          )
+        : note.isFavorite
+            ? IconButton(
+                onPressed: () => context.read<NoteBloc>().add(
+                      NoteFavoriteToggled(note.id!),
+                    ),
+                icon: const Icon(Icons.star),
+              )
+            : IconButton(
+                onPressed: () => context.read<NoteBloc>().add(
+                      NoteFavoriteToggled(note.id!),
+                    ),
+                icon: const Icon(Icons.star_border),
+              );
+  }
+}
+
+class NoteTrashIconButton extends StatelessWidget {
+  final List<Note> notes;
+  final int index;
+  const NoteTrashIconButton(
+      {required this.notes, required this.index, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return notes[index].isSelected
+        ? IconButton(
+            onPressed: () => context.read<NoteBloc>().add(
+                  NoteDeleted(notes),
+                ),
+            icon: const Icon(Icons.delete),
+          )
+        : IconButton(
+            onPressed: () => context.read<NoteBloc>().add(
+                  NoteDeleteToggled(notes[index].id!),
+                ),
+            icon: const Icon(Icons.undo),
+          );
   }
 }
