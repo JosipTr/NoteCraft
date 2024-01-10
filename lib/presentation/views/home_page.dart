@@ -54,10 +54,20 @@ class HomeView extends StatelessWidget {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddNotePage())),
-          child: const Text("Add"),
+        floatingActionButton: BlocBuilder<NoteBloc, NoteState>(
+          builder: (context, state) {
+            if (state is NoteLoadSuccess) {
+              if (state.noteFilter == NoteFilter.deleted ||
+                  state.noteFilter == NoteFilter.favorite) {
+                return const SizedBox();
+              }
+            }
+            return FloatingActionButton(
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const AddNotePage())),
+              child: Icon(Icons.note_add),
+            );
+          },
         ),
         body: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
