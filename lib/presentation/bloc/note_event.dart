@@ -9,6 +9,10 @@ sealed class NoteEvent extends Equatable {
 
 final class NoteGetRequested extends NoteEvent {}
 
+final class NoteDeletedGetRequested extends NoteEvent {}
+
+final class NoteFavoriteGetRequested extends NoteEvent {}
+
 final class NoteAdded extends NoteEvent {
   final AddNoteParam param;
 

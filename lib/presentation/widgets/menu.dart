@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../views/views.dart';
+
 class Menu extends StatelessWidget {
   const Menu({
     super.key,
@@ -23,19 +25,23 @@ class Menu extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text('All Notes'),
+            title: const Text('Notes'),
             leading: const Icon(Icons.note),
             onTap: () {
-              // Update the state of the app.
-              // ...
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
             },
           ),
           ListTile(
             title: const Text('Favorites'),
             leading: const Icon(Icons.star),
             onTap: () {
-              // Update the state of the app.
-              // ...
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => const FavoriteNotePage()),
+              );
             },
           ),
           ListTile(

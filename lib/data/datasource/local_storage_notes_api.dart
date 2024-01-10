@@ -59,4 +59,12 @@ class LocalStorageNotesApi implements NotesApi {
       ),
     );
   }
+
+  @override
+  Future<List<NoteModel>> getFavoriteNotes() async {
+    final noteItems = await (_appDatabase.select(_appDatabase.noteItems)
+          ..where((tbl) => tbl.favorite.equals(true)))
+        .get();
+    return noteItems.map((note) => NoteModel.fromJson(note.toJson())).toList();
+  }
 }

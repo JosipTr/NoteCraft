@@ -5,31 +5,27 @@ import 'package:notecraft/di/injector.dart';
 import '../bloc/note_bloc.dart';
 import '../widgets/widgets.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class FavoriteNotePage extends StatelessWidget {
+  const FavoriteNotePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<NoteBloc>(
-      create: (_) => injector()..add(NoteGetRequested()),
-      child: const HomeView(),
+      create: (_) => injector()..add(NoteFavoriteGetRequested()),
+      child: const FavoriteNoteView(),
     );
   }
 }
 
-class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+class FavoriteNoteView extends StatelessWidget {
+  const FavoriteNoteView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: const Menu(),
         appBar: AppBar(
-          title: const Text("Notes"),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(context, '/addNote'),
-          child: const Text("Add"),
+          title: const Text("Favorites"),
         ),
         body: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
