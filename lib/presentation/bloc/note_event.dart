@@ -1,7 +1,5 @@
 part of 'note_bloc.dart';
 
-enum NoteFilter { deleted, favorite, notes }
-
 sealed class NoteEvent extends Equatable {
   const NoteEvent();
 

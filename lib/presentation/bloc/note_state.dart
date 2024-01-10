@@ -1,5 +1,7 @@
 part of 'note_bloc.dart';
 
+enum NoteFilter { deleted, favorite, notes }
+
 sealed class NoteState extends Equatable {
   const NoteState();
 
@@ -13,12 +15,12 @@ final class NoteLoadInProgress extends NoteState {}
 
 final class NoteLoadSuccess extends NoteState {
   final List<Note> notes;
-  final String title;
+  final NoteFilter noteFilter;
 
-  const NoteLoadSuccess(this.notes, this.title);
+  const NoteLoadSuccess(this.notes, this.noteFilter);
 
   @override
-  List<Object> get props => [notes, title];
+  List<Object> get props => [notes, noteFilter];
 }
 
 final class NoteLoadFailure extends NoteState {}

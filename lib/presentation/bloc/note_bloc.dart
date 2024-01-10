@@ -28,19 +28,19 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     emit(NoteLoadInProgress());
     await emit.forEach(_notesRepository.getNotes(), onData: (notes) {
       if (event.noteFilter == NoteFilter.favorite) {
-        return NoteLoadSuccess(
-            notes.where((note) => note.isFavorite).toList(), "Favorites");
+        return NoteLoadSuccess(notes.where((note) => note.isFavorite).toList(),
+            NoteFilter.favorite);
       }
       if (event.noteFilter == NoteFilter.deleted) {
         return NoteLoadSuccess(
-            notes.where((note) => note.isDeleted).toList(), "Trash");
+            notes.where((note) => note.isDeleted).toList(), NoteFilter.deleted);
       }
       return NoteLoadSuccess(
           notes
               .map((note) => note.copyWith(isSelected: false))
               .where((note) => !note.isDeleted)
               .toList(),
-          "Notes");
+          NoteFilter.notes);
     }, onError: (error, stackTrace) {
       log(error.toString());
       log(stackTrace.toString());
@@ -91,7 +91,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
               ? note.copyWith(isSelected: !note.isSelected)
               : note)
           .toList();
-      emit(NoteLoadSuccess(updatedNotes, "Notes"));
+      emit(NoteLoadSuccess(updatedNotes, NoteFilter.notes));
     }
   }
 }

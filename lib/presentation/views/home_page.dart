@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notecraft/di/injector.dart';
+import 'package:notecraft/domain/entities/note_filter.dart';
 
 import '../bloc/note_bloc.dart';
 import '../widgets/widgets.dart';
@@ -28,7 +29,7 @@ class HomeView extends StatelessWidget {
         appBar: AppBar(
           title: BlocBuilder<NoteBloc, NoteState>(
             builder: (context, state) {
-              if (state is NoteLoadSuccess) return Text(state.title);
+              if (state is NoteLoadSuccess) return Text(state.noteFilter.title);
               return const Text("Notes");
             },
           ),
