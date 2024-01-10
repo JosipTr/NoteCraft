@@ -21,6 +21,8 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     on<NoteSelectToggled>(_onNoteSelectToggled);
     on<NoteDeleteToggled>(_onNoteDeleteToggled);
     on<NoteUpdated>(_onNoteUpdated);
+    on<NoteDeleteAllRequested>(_onNoteDeleteAllRequested);
+    on<NoteRestored>(_onNoteRestored);
   }
 
   Future<void> _onNoteGetRequested(
@@ -79,6 +81,15 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Future<void> _onNoteDeleteToggled(
       NoteDeleteToggled event, Emitter<NoteState> emit) async {
+    for (final note in event.notes) {
+      if (note.isSelected) {
+        await _notesRepository.toggleDelete(note.id!);
+      }
+    }
+  }
+
+  Future<void> _onNoteRestored(
+      NoteRestored event, Emitter<NoteState> emit) async {
     await _notesRepository.toggleDelete(event.id);
   }
 
@@ -94,5 +105,10 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       emit(
           NoteLoadSuccess(updatedNotes, (state as NoteLoadSuccess).noteFilter));
     }
+  }
+
+  Future<void> _onNoteDeleteAllRequested(
+      NoteDeleteAllRequested event, Emitter<NoteState> emit) async {
+    await _notesRepository.deleteAllNotes();
   }
 }

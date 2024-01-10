@@ -68,10 +68,23 @@ class NoteSelectToggled extends NoteEvent {
 }
 
 class NoteDeleteToggled extends NoteEvent {
+  final List<Note> notes;
+
+  const NoteDeleteToggled(this.notes);
+
+  @override
+  List<Object> get props => [notes];
+}
+
+class NoteRestored extends NoteEvent {
   final int id;
 
-  const NoteDeleteToggled(this.id);
+  const NoteRestored(this.id);
 
   @override
   List<Object> get props => [id];
+}
+
+class NoteDeleteAllRequested extends NoteEvent {
+  const NoteDeleteAllRequested();
 }

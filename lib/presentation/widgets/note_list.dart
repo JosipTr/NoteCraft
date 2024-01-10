@@ -36,7 +36,8 @@ class NoteList extends StatelessWidget {
             trailing: noteFilter == NoteFilter.notes ||
                     noteFilter == NoteFilter.favorite
                 ? NoteIconButton(
-                    note: notes[index],
+                    notes: notes,
+                    index: index,
                   )
                 : NoteTrashIconButton(
                     notes: notes,
@@ -75,28 +76,29 @@ class NoteList extends StatelessWidget {
 }
 
 class NoteIconButton extends StatelessWidget {
-  final Note note;
-  const NoteIconButton({required this.note, super.key});
+  final List<Note> notes;
+  final int index;
+  const NoteIconButton({required this.notes, required this.index, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return note.isSelected
+    return notes[index].isSelected
         ? IconButton(
             onPressed: () => context.read<NoteBloc>().add(
-                  NoteDeleteToggled(note.id!),
+                  NoteDeleteToggled(notes),
                 ),
             icon: const Icon(Icons.delete),
           )
-        : note.isFavorite
+        : notes[index].isFavorite
             ? IconButton(
                 onPressed: () => context.read<NoteBloc>().add(
-                      NoteFavoriteToggled(note.id!),
+                      NoteFavoriteToggled(notes[index].id!),
                     ),
                 icon: const Icon(Icons.star),
               )
             : IconButton(
                 onPressed: () => context.read<NoteBloc>().add(
-                      NoteFavoriteToggled(note.id!),
+                      NoteFavoriteToggled(notes[index].id!),
                     ),
                 icon: const Icon(Icons.star_border),
               );
@@ -120,7 +122,7 @@ class NoteTrashIconButton extends StatelessWidget {
           )
         : IconButton(
             onPressed: () => context.read<NoteBloc>().add(
-                  NoteDeleteToggled(notes[index].id!),
+                  NoteRestored(notes[index].id!),
                 ),
             icon: const Icon(Icons.undo),
           );

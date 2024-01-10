@@ -33,6 +33,26 @@ class HomeView extends StatelessWidget {
               return const Text("Notes");
             },
           ),
+          actions: [
+            BlocBuilder<NoteBloc, NoteState>(
+              builder: (context, state) {
+                if (state is NoteLoadSuccess) {
+                  if (state.noteFilter == NoteFilter.deleted) {
+                    return PopupMenuButton(
+                        itemBuilder: (context) => [
+                              PopupMenuItem(
+                                child: const Text("Empty Trash"),
+                                onTap: () => context
+                                    .read<NoteBloc>()
+                                    .add(const NoteDeleteAllRequested()),
+                              ),
+                            ]);
+                  }
+                }
+                return const SizedBox();
+              },
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context).push(

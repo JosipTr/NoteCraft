@@ -71,4 +71,11 @@ class LocalStorageNotesApi implements NotesApi {
         .write(NoteItemsCompanion(
             deleted: Value(!note.deleted), favorite: const Value(false)));
   }
+
+  @override
+  Future<void> deleteAllNotes() async {
+    await (_appDatabase.delete(_appDatabase.noteItems)
+          ..where((tbl) => tbl.deleted.equals(true)))
+        .go();
+  }
 }
