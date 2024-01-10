@@ -1,9 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:notecraft/data/models/database.dart';
-import 'package:notecraft/data/models/note_model.dart';
 import 'package:notecraft/data/repositories/notes_api.dart';
 
-import '../models/add_note_param.dart';
+import '../models/models.dart';
 
 class LocalStorageNotesApi implements NotesApi {
   final AppDatabase _appDatabase;

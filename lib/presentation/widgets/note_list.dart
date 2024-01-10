@@ -4,6 +4,7 @@ import 'package:notecraft/presentation/bloc/note_bloc.dart';
 import 'package:date_format/date_format.dart';
 
 import '../../domain/entities/note.dart';
+import '../views/add_note_page.dart';
 
 class NoteList extends StatelessWidget {
   final List<Note> notes;
@@ -46,7 +47,11 @@ class NoteList extends StatelessWidget {
                 ),
           onLongPress: () => context.read<NoteBloc>().add(
                 NoteSelectToggled(notes[index].id!),
-              ), //Always has id from db
+              ),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddNotePage(
+                    note: notes[index],
+                  ))), //Always has id from db
         ),
       ),
     );
