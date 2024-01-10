@@ -35,13 +35,19 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Future<void> _onNoteAdded(NoteAdded event, Emitter<NoteState> emit) async {
+    emit(NoteLoadInProgress());
     if (event.param.title.isEmpty && event.param.description.isEmpty) return;
     await _notesRepository.addNote(event.param);
   }
 
   Future<void> _onNoteDeleted(
       NoteDeleted event, Emitter<NoteState> emit) async {
-    await _notesRepository.deleteNote(event.id);
+    emit(NoteLoadInProgress());
+    for (final note in event.notes) {
+      if (note.isSelected) {
+        await _notesRepository.deleteNote(note.id!);
+      }
+    }
   }
 
   Future<void> _onNoteUpdated(

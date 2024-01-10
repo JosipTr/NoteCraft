@@ -19,12 +19,12 @@ final class NoteAdded extends NoteEvent {
 }
 
 final class NoteDeleted extends NoteEvent {
-  final int id;
+  final List<Note> notes;
 
-  const NoteDeleted(this.id);
+  const NoteDeleted(this.notes);
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [notes];
 }
 
 final class NoteUpdated extends NoteEvent {

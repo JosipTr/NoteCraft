@@ -18,41 +18,67 @@ class NoteList extends StatelessWidget {
       itemBuilder: (context, index) => Card(
         color: notes[index].isSelected ? Colors.blueGrey : null,
         child: ListTile(
-          title: Text(notes[index].title),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(notes[index].description, maxLines: 1),
-              Text(
-                formatDate(
-                  DateTime.fromMillisecondsSinceEpoch(notes[index].date),
-                  [dd, '-', mm, '-', yyyy, ' ', hh, ":", nn, ":", ss],
+            title: Text(notes[index].title),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(notes[index].description, maxLines: 1),
+                Text(
+                  formatDate(
+                    DateTime.fromMillisecondsSinceEpoch(notes[index].date),
+                    [dd, '-', mm, '-', yyyy, ' ', hh, ":", nn, ":", ss],
+                  ),
+                  maxLines: 1,
                 ),
-                maxLines: 1,
-              ),
-            ],
-          ),
-          trailing: notes[index].isFavorite
-              ? IconButton(
-                  onPressed: () => context.read<NoteBloc>().add(
-                        NoteFavoriteToggled(notes[index].id!),
+              ],
+            ),
+            trailing: notes[index].isSelected
+                ? IconButton(
+                    onPressed: () => context.read<NoteBloc>().add(
+                          NoteDeleted(notes),
+                        ),
+                    icon: const Icon(Icons.delete),
+                  )
+                : notes[index].isFavorite
+                    ? IconButton(
+                        onPressed: () => context.read<NoteBloc>().add(
+                              NoteFavoriteToggled(notes[index].id!),
+                            ),
+                        icon: const Icon(Icons.star),
+                      )
+                    : IconButton(
+                        onPressed: () => context.read<NoteBloc>().add(
+                              NoteFavoriteToggled(notes[index].id!),
+                            ),
+                        icon: const Icon(Icons.star_border),
                       ),
-                  icon: const Icon(Icons.star),
-                )
-              : IconButton(
-                  onPressed: () => context.read<NoteBloc>().add(
-                        NoteFavoriteToggled(notes[index].id!),
-                      ),
-                  icon: const Icon(Icons.star_border),
+            onLongPress: () => context.read<NoteBloc>().add(
+                  NoteSelectToggled(notes[index].id!),
                 ),
-          onLongPress: () => context.read<NoteBloc>().add(
-                NoteSelectToggled(notes[index].id!),
-              ),
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddNotePage(
+            onTap: () {
+              var isSelected = false;
+              for (final note in notes) {
+                if (note.isSelected) {
+                  isSelected = true;
+                  break;
+                }
+              }
+              if (isSelected) {
+                context.read<NoteBloc>().add(
+                      NoteSelectToggled(notes[index].id!),
+                    );
+                return;
+              }
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AddNotePage(
                     note: notes[index],
-                  ))), //Always has id from db
-        ),
+                  ),
+                ),
+              );
+              return;
+            } //Always has id from db
+            ),
       ),
     );
   }
