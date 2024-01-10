@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../views/views.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notecraft/presentation/bloc/note_bloc.dart';
 
 class Menu extends StatelessWidget {
   const Menu({
@@ -10,11 +10,7 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      // Add a ListView to the drawer. This ensures the user can scroll
-      // through the options in the drawer if there isn't enough vertical
-      // space to fit everything.
       child: ListView(
-        // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
           const SizedBox(
@@ -28,29 +24,26 @@ class Menu extends StatelessWidget {
             title: const Text('Notes'),
             leading: const Icon(Icons.note),
             onTap: () {
+              context
+                  .read<NoteBloc>()
+                  .add(const NoteGetRequested(NoteFilter.notes));
               Navigator.pop(context);
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
             },
           ),
           ListTile(
             title: const Text('Favorites'),
             leading: const Icon(Icons.star),
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => const FavoriteNotePage()),
-              );
+              context
+                  .read<NoteBloc>()
+                  .add(const NoteGetRequested(NoteFilter.favorite));
+              Navigator.pop(context);
             },
           ),
           ListTile(
             title: const Text('Thrash'),
             leading: const Icon(Icons.delete),
-            onTap: () {
-              // Update the state of the app.
-              // ...
-            },
+            onTap: () {},
           ),
         ],
       ),

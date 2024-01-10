@@ -13,11 +13,12 @@ final class NoteLoadInProgress extends NoteState {}
 
 final class NoteLoadSuccess extends NoteState {
   final List<Note> notes;
+  final String title;
 
-  const NoteLoadSuccess(this.notes);
+  const NoteLoadSuccess(this.notes, this.title);
 
   @override
-  List<Object> get props => [notes];
+  List<Object> get props => [notes, title];
 }
 
 final class NoteLoadFailure extends NoteState {}

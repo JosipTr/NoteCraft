@@ -20,27 +20,24 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     on<NoteFavoriteToggled>(_onNoteFavoriteToggled);
     on<NoteSelectToggled>(_onNoteSelectToggled);
     on<NoteUpdated>(_onNoteUpdated);
-    on<NoteFavoriteGetRequested>(_onNoteFavoriteGetRequested);
   }
 
   Future<void> _onNoteGetRequested(
       NoteGetRequested event, Emitter<NoteState> emit) async {
     emit(NoteLoadInProgress());
-    await emit.forEach(_notesRepository.getNotes(),
-        onData: (notes) => NoteLoadSuccess(
-            notes.map((note) => note.copyWith(isSelected: false)).toList()),
-        onError: (error, stackTrace) {
-          log(error.toString());
-          log(stackTrace.toString());
-          return NoteLoadFailure();
-        });
-  }
-
-  Future<void> _onNoteFavoriteGetRequested(
-      NoteFavoriteGetRequested event, Emitter<NoteState> emit) async {
-    emit(NoteLoadInProgress());
-    final favoriteNotes = await _notesRepository.getFavoriteNotes();
-    emit(NoteLoadSuccess(favoriteNotes));
+    await emit.forEach(_notesRepository.getNotes(), onData: (notes) {
+      if (event.noteFilter == NoteFilter.favorite) {
+        return NoteLoadSuccess(
+            notes.where((note) => note.isFavorite).toList(), "Favorites");
+      }
+      return NoteLoadSuccess(
+          notes.map((note) => note.copyWith(isSelected: false)).toList(),
+          "Notes");
+    }, onError: (error, stackTrace) {
+      log(error.toString());
+      log(stackTrace.toString());
+      return NoteLoadFailure();
+    });
   }
 
   Future<void> _onNoteAdded(NoteAdded event, Emitter<NoteState> emit) async {
@@ -81,7 +78,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
               ? note.copyWith(isSelected: !note.isSelected)
               : note)
           .toList();
-      emit(NoteLoadSuccess(updatedNotes));
+      emit(NoteLoadSuccess(updatedNotes, "Notes"));
     }
   }
 }

@@ -1,5 +1,7 @@
 part of 'note_bloc.dart';
 
+enum NoteFilter { deleted, favorite, notes }
+
 sealed class NoteEvent extends Equatable {
   const NoteEvent();
 
@@ -7,7 +9,14 @@ sealed class NoteEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class NoteGetRequested extends NoteEvent {}
+final class NoteGetRequested extends NoteEvent {
+  final NoteFilter noteFilter;
+
+  const NoteGetRequested(this.noteFilter);
+
+  @override
+  List<Object> get props => [noteFilter];
+}
 
 final class NoteDeletedGetRequested extends NoteEvent {}
 
