@@ -19,6 +19,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     on<NoteDeleted>(_onNoteDeleted);
     on<NoteFavoriteToggled>(_onNoteFavoriteToggled);
     on<NoteSelectToggled>(_onNoteSelectToggled);
+    on<NoteDeleteToggled>(_onNoteDeleteToggled);
     on<NoteUpdated>(_onNoteUpdated);
   }
 
@@ -30,8 +31,15 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         return NoteLoadSuccess(
             notes.where((note) => note.isFavorite).toList(), "Favorites");
       }
+      if (event.noteFilter == NoteFilter.deleted) {
+        return NoteLoadSuccess(
+            notes.where((note) => note.isDeleted).toList(), "Trash");
+      }
       return NoteLoadSuccess(
-          notes.map((note) => note.copyWith(isSelected: false)).toList(),
+          notes
+              .map((note) => note.copyWith(isSelected: false))
+              .where((note) => !note.isDeleted)
+              .toList(),
           "Notes");
     }, onError: (error, stackTrace) {
       log(error.toString());
@@ -67,6 +75,11 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Future<void> _onNoteFavoriteToggled(
       NoteFavoriteToggled event, Emitter<NoteState> emit) async {
     await _notesRepository.toggleFavorite(event.id);
+  }
+
+  Future<void> _onNoteDeleteToggled(
+      NoteDeleteToggled event, Emitter<NoteState> emit) async {
+    await _notesRepository.toggleDelete(event.id);
   }
 
   Future<void> _onNoteSelectToggled(

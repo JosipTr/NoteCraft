@@ -8,6 +8,7 @@ class NoteModel extends Note {
     required super.date,
     super.isSelected,
     super.isFavorite,
+    super.isDeleted,
   });
 
   factory NoteModel.fromJson(Map<String, dynamic> data) {
@@ -34,6 +35,12 @@ class NoteModel extends Note {
           'Invalid JSON: required "isFavorite" field of type bool in $data');
     }
 
+    final isDeleted = data['deleted'];
+    if (isDeleted is! bool) {
+      throw FormatException(
+          'Invalid JSON: required "isDeleted" field of type bool in $data');
+    }
+
     final id = data['id'] as int?;
 
     return NoteModel(
@@ -42,7 +49,8 @@ class NoteModel extends Note {
         description: description,
         date: date,
         isFavorite: isFavorite,
-        isSelected: false);
+        isSelected: false,
+        isDeleted: isDeleted);
   }
 
   Map<String, dynamic> toJson() {
@@ -51,17 +59,20 @@ class NoteModel extends Note {
       'description': description,
       'date': date,
       'favorite': isFavorite,
+      'deleted': isDeleted,
       if (id != null) 'id': id
     };
   }
 
   factory NoteModel.fromNote(Note note) {
     return NoteModel(
-        id: note.id,
-        title: note.title,
-        description: note.description,
-        date: note.date,
-        isFavorite: note.isFavorite,
-        isSelected: note.isSelected);
+      id: note.id,
+      title: note.title,
+      description: note.description,
+      date: note.date,
+      isFavorite: note.isFavorite,
+      isSelected: note.isSelected,
+      isDeleted: note.isDeleted,
+    );
   }
 }

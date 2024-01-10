@@ -46,9 +46,19 @@ class $NoteItemsTable extends NoteItems
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("favorite" IN (0, 1))'),
       defaultValue: const Constant(false));
+  static const VerificationMeta _deletedMeta =
+      const VerificationMeta('deleted');
+  @override
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, title, description, date, favorite];
+      [id, title, description, date, favorite, deleted];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -84,6 +94,10 @@ class $NoteItemsTable extends NoteItems
       context.handle(_favoriteMeta,
           favorite.isAcceptableOrUnknown(data['favorite']!, _favoriteMeta));
     }
+    if (data.containsKey('deleted')) {
+      context.handle(_deletedMeta,
+          deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta));
+    }
     return context;
   }
 
@@ -103,6 +117,8 @@ class $NoteItemsTable extends NoteItems
           .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
       favorite: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}favorite'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
     );
   }
 
@@ -118,12 +134,14 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
   final String description;
   final DateTime date;
   final bool favorite;
+  final bool deleted;
   const NoteItem(
       {required this.id,
       required this.title,
       required this.description,
       required this.date,
-      required this.favorite});
+      required this.favorite,
+      required this.deleted});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -132,6 +150,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
     map['body'] = Variable<String>(description);
     map['date'] = Variable<DateTime>(date);
     map['favorite'] = Variable<bool>(favorite);
+    map['deleted'] = Variable<bool>(deleted);
     return map;
   }
 
@@ -142,6 +161,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       description: Value(description),
       date: Value(date),
       favorite: Value(favorite),
+      deleted: Value(deleted),
     );
   }
 
@@ -154,6 +174,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       description: serializer.fromJson<String>(json['description']),
       date: serializer.fromJson<DateTime>(json['date']),
       favorite: serializer.fromJson<bool>(json['favorite']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
     );
   }
   @override
@@ -165,6 +186,7 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
       'description': serializer.toJson<String>(description),
       'date': serializer.toJson<DateTime>(date),
       'favorite': serializer.toJson<bool>(favorite),
+      'deleted': serializer.toJson<bool>(deleted),
     };
   }
 
@@ -173,13 +195,15 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
           String? title,
           String? description,
           DateTime? date,
-          bool? favorite}) =>
+          bool? favorite,
+          bool? deleted}) =>
       NoteItem(
         id: id ?? this.id,
         title: title ?? this.title,
         description: description ?? this.description,
         date: date ?? this.date,
         favorite: favorite ?? this.favorite,
+        deleted: deleted ?? this.deleted,
       );
   @override
   String toString() {
@@ -188,13 +212,15 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
-          ..write('favorite: $favorite')
+          ..write('favorite: $favorite, ')
+          ..write('deleted: $deleted')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, description, date, favorite);
+  int get hashCode =>
+      Object.hash(id, title, description, date, favorite, deleted);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -203,7 +229,8 @@ class NoteItem extends DataClass implements Insertable<NoteItem> {
           other.title == this.title &&
           other.description == this.description &&
           other.date == this.date &&
-          other.favorite == this.favorite);
+          other.favorite == this.favorite &&
+          other.deleted == this.deleted);
 }
 
 class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
@@ -212,12 +239,14 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
   final Value<String> description;
   final Value<DateTime> date;
   final Value<bool> favorite;
+  final Value<bool> deleted;
   const NoteItemsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
     this.date = const Value.absent(),
     this.favorite = const Value.absent(),
+    this.deleted = const Value.absent(),
   });
   NoteItemsCompanion.insert({
     this.id = const Value.absent(),
@@ -225,6 +254,7 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
     required String description,
     required DateTime date,
     this.favorite = const Value.absent(),
+    this.deleted = const Value.absent(),
   })  : title = Value(title),
         description = Value(description),
         date = Value(date);
@@ -234,6 +264,7 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
     Expression<String>? description,
     Expression<DateTime>? date,
     Expression<bool>? favorite,
+    Expression<bool>? deleted,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -241,6 +272,7 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
       if (description != null) 'body': description,
       if (date != null) 'date': date,
       if (favorite != null) 'favorite': favorite,
+      if (deleted != null) 'deleted': deleted,
     });
   }
 
@@ -249,13 +281,15 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
       Value<String>? title,
       Value<String>? description,
       Value<DateTime>? date,
-      Value<bool>? favorite}) {
+      Value<bool>? favorite,
+      Value<bool>? deleted}) {
     return NoteItemsCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       date: date ?? this.date,
       favorite: favorite ?? this.favorite,
+      deleted: deleted ?? this.deleted,
     );
   }
 
@@ -277,6 +311,9 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
     if (favorite.present) {
       map['favorite'] = Variable<bool>(favorite.value);
     }
+    if (deleted.present) {
+      map['deleted'] = Variable<bool>(deleted.value);
+    }
     return map;
   }
 
@@ -287,7 +324,8 @@ class NoteItemsCompanion extends UpdateCompanion<NoteItem> {
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
-          ..write('favorite: $favorite')
+          ..write('favorite: $favorite, ')
+          ..write('deleted: $deleted')
           ..write(')'))
         .toString();
   }

@@ -41,9 +41,14 @@ class Menu extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Thrash'),
+            title: const Text('Trash'),
             leading: const Icon(Icons.delete),
-            onTap: () {},
+            onTap: () {
+              context
+                  .read<NoteBloc>()
+                  .add(const NoteGetRequested(NoteFilter.deleted));
+              Navigator.pop(context);
+            },
           ),
         ],
       ),

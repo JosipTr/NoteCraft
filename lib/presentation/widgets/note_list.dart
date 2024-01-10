@@ -35,7 +35,7 @@ class NoteList extends StatelessWidget {
             trailing: notes[index].isSelected
                 ? IconButton(
                     onPressed: () => context.read<NoteBloc>().add(
-                          NoteDeleted(notes),
+                          NoteDeleteToggled(notes[index].id!),
                         ),
                     icon: const Icon(Icons.delete),
                   )

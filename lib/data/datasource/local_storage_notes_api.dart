@@ -51,12 +51,23 @@ class LocalStorageNotesApi implements NotesApi {
           ..where((tbl) => tbl.id.equals(noteModel.id!)))
         .write(
       NoteItemsCompanion(
-        id: Value(noteModel.id!),
-        title: Value(noteModel.title),
-        description: Value(noteModel.description),
-        date: Value(DateTime.now()),
-        favorite: Value(noteModel.isFavorite),
-      ),
+          id: Value(noteModel.id!),
+          title: Value(noteModel.title),
+          description: Value(noteModel.description),
+          date: Value(DateTime.now()),
+          favorite: Value(noteModel.isFavorite),
+          deleted: Value(noteModel.isDeleted)),
     );
+  }
+
+  @override
+  Future<void> toggleDelete(int id) async {
+    final note = await (_appDatabase.select(_appDatabase.noteItems)
+          ..where((tbl) => tbl.id.equals(id)))
+        .getSingle();
+
+    await (_appDatabase.update(_appDatabase.noteItems)
+          ..where((tbl) => tbl.id.equals(id)))
+        .write(NoteItemsCompanion(deleted: Value(!note.deleted)));
   }
 }

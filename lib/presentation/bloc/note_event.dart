@@ -18,10 +18,6 @@ final class NoteGetRequested extends NoteEvent {
   List<Object> get props => [noteFilter];
 }
 
-final class NoteDeletedGetRequested extends NoteEvent {}
-
-final class NoteFavoriteGetRequested extends NoteEvent {}
-
 final class NoteAdded extends NoteEvent {
   final AddNoteParam param;
 
@@ -68,6 +64,15 @@ class NoteSelectToggled extends NoteEvent {
   final int id;
 
   const NoteSelectToggled(this.id);
+
+  @override
+  List<Object> get props => [id];
+}
+
+class NoteDeleteToggled extends NoteEvent {
+  final int id;
+
+  const NoteDeleteToggled(this.id);
 
   @override
   List<Object> get props => [id];
