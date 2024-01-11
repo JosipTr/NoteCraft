@@ -33,7 +33,7 @@ class NoteList extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: noteFilter == NoteFilter.notes ||
+            trailing: noteFilter == NoteFilter.main ||
                     noteFilter == NoteFilter.favorite
                 ? NoteIconButton(
                     notes: notes,

@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<NoteBloc>(
-      create: (_) => injector()..add(const NoteGetRequested(NoteFilter.notes)),
+      create: (_) => injector()..add(const NoteGetRequested(NoteFilter.main)),
       child: const HomeView(),
     );
   }
@@ -37,7 +37,7 @@ class HomeView extends StatelessWidget {
             BlocBuilder<NoteBloc, NoteState>(
               builder: (context, state) {
                 if (state is NoteLoadSuccess) {
-                  if (state.noteFilter == NoteFilter.deleted) {
+                  if (state.noteFilter == NoteFilter.trash) {
                     return PopupMenuButton(
                         itemBuilder: (context) => [
                               PopupMenuItem(
@@ -57,7 +57,7 @@ class HomeView extends StatelessWidget {
         floatingActionButton: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
             if (state is NoteLoadSuccess) {
-              if (state.noteFilter == NoteFilter.deleted ||
+              if (state.noteFilter == NoteFilter.trash ||
                   state.noteFilter == NoteFilter.favorite) {
                 return const SizedBox();
               }
@@ -65,7 +65,7 @@ class HomeView extends StatelessWidget {
             return FloatingActionButton(
               onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const AddNotePage())),
-              child: Icon(Icons.note_add),
+              child: const Icon(Icons.note_add),
             );
           },
         ),

@@ -33,16 +33,16 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         return NoteLoadSuccess(notes.where((note) => note.isFavorite).toList(),
             NoteFilter.favorite);
       }
-      if (event.noteFilter == NoteFilter.deleted) {
+      if (event.noteFilter == NoteFilter.trash) {
         return NoteLoadSuccess(
-            notes.where((note) => note.isDeleted).toList(), NoteFilter.deleted);
+            notes.where((note) => note.isDeleted).toList(), NoteFilter.trash);
       }
       return NoteLoadSuccess(
           notes
               .map((note) => note.copyWith(isSelected: false))
               .where((note) => !note.isDeleted)
               .toList(),
-          NoteFilter.notes);
+          NoteFilter.main);
     }, onError: (error, stackTrace) {
       log(error.toString());
       log(stackTrace.toString());

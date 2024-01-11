@@ -1,6 +1,6 @@
 part of 'note_bloc.dart';
 
-enum NoteFilter { deleted, favorite, notes }
+enum NoteFilter { trash, favorite, main }
 
 sealed class NoteState extends Equatable {
   const NoteState();

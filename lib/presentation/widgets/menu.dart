@@ -26,7 +26,7 @@ class Menu extends StatelessWidget {
             onTap: () {
               context
                   .read<NoteBloc>()
-                  .add(const NoteGetRequested(NoteFilter.notes));
+                  .add(const NoteGetRequested(NoteFilter.main));
               Navigator.pop(context);
             },
           ),
@@ -46,7 +46,7 @@ class Menu extends StatelessWidget {
             onTap: () {
               context
                   .read<NoteBloc>()
-                  .add(const NoteGetRequested(NoteFilter.deleted));
+                  .add(const NoteGetRequested(NoteFilter.trash));
               Navigator.pop(context);
             },
           ),
