@@ -73,7 +73,10 @@ class HomeView extends StatelessWidget {
           builder: (context, state) {
             if (state is NoteLoadSuccess) {
               if (state.notes.isEmpty) return const NoteListEmpty();
-              return NoteList(notes: state.notes, noteFilter: state.noteFilter);
+              return NoteList(
+                notes: state.notes,
+                noteFilter: state.noteFilter,
+              );
             }
             if (state is NoteLoadFailure) {
               return const NoteFailure();

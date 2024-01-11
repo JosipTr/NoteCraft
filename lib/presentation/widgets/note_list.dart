@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notecraft/presentation/bloc/note_bloc.dart';
 import 'package:date_format/date_format.dart';
+import 'package:notecraft/presentation/widgets/widgets.dart';
 
 import '../../domain/entities/note.dart';
-import '../views/add_note_page.dart';
+import '../views/views.dart';
 
 class NoteList extends StatelessWidget {
   final List<Note> notes;
@@ -33,13 +34,9 @@ class NoteList extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: noteFilter == NoteFilter.main ||
-                    noteFilter == NoteFilter.favorite
-                ? NoteIconButton(
-                    notes: notes,
-                    index: index,
-                  )
-                : NoteTrashIconButton(
+            trailing: noteFilter == NoteFilter.trash
+                ? NoteTrashIconButton(notes: notes, index: index)
+                : NoteIconButton(
                     notes: notes,
                     index: index,
                   ),
@@ -62,7 +59,7 @@ class NoteList extends StatelessWidget {
               }
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => AddNotePage(
+                  builder: (context) => EditNotePage(
                     note: notes[index],
                   ),
                 ),
@@ -102,29 +99,5 @@ class NoteIconButton extends StatelessWidget {
                     ),
                 icon: const Icon(Icons.star_border),
               );
-  }
-}
-
-class NoteTrashIconButton extends StatelessWidget {
-  final List<Note> notes;
-  final int index;
-  const NoteTrashIconButton(
-      {required this.notes, required this.index, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return notes[index].isSelected
-        ? IconButton(
-            onPressed: () => context.read<NoteBloc>().add(
-                  NoteDeleted(notes),
-                ),
-            icon: const Icon(Icons.delete),
-          )
-        : IconButton(
-            onPressed: () => context.read<NoteBloc>().add(
-                  NoteRestored(notes[index].id!),
-                ),
-            icon: const Icon(Icons.undo),
-          );
   }
 }
