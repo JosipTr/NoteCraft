@@ -80,4 +80,17 @@ class LocalStorageNotesApi implements NotesApi {
           ..where((tbl) => tbl.deleted.equals(true)))
         .go();
   }
+
+  @override
+  Future<List<NoteModel>> searchNotes(String text) {
+    return (_appDatabase
+        .select(_appDatabase.noteItems)
+        .map((noteItem) => NoteModel.fromJson(noteItem.toJson()))
+        .get());
+    //     .watch()
+    //     .map((noteItemList) => noteItemList
+    //         .map((noteItem) => NoteModel.fromJson(noteItem.toJson()))
+    //         .toList());
+    // return noteModelStreamList;
+  }
 }

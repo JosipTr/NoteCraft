@@ -27,6 +27,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     on<NoteUpdated>(_onNoteUpdated);
     on<NoteDeleteAllRequested>(_onNoteDeleteAllRequested);
     on<NoteRestored>(_onNoteRestored);
+    on<NoteSearched>(_onNoteSearched);
   }
 
   Future<void> _onNoteGetRequested(
@@ -117,5 +118,23 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Future<void> _onNoteDeleteAllRequested(
       NoteDeleteAllRequested event, Emitter<NoteState> emit) async {
     await _notesRepository.deleteAllNotes();
+  }
+
+  Future<void> _onNoteSearched(
+    NoteSearched event,
+    Emitter<NoteState> emit,
+  ) async {
+    if (state is NoteLoadSuccess) {
+      final filter = (state as NoteLoadSuccess).noteFilter;
+
+      final notes = await _notesRepository.searchNotes(event.text);
+
+      final filteredNotes = notes
+          .where((note) =>
+              note.title.toLowerCase().startsWith(event.text.toLowerCase()))
+          .toList();
+
+      emit(NoteLoadSuccess(filteredNotes, filter));
+    }
   }
 }

@@ -17,4 +17,7 @@ class NotesRepository {
 
   Future<void> updateNote(Note note) =>
       _notesApi.updateNote(NoteModel.fromNote(note));
+
+  Future<List<NoteModel>> searchNotes(String text) =>
+      _notesApi.searchNotes(text);
 }

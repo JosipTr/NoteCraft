@@ -10,6 +10,8 @@ import 'package:notecraft/presentation/bloc/note_bloc.dart';
 import 'package:notecraft/presentation/cubit/settings_cubit/settings_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../presentation/cubit/search_cubit/search_cubit.dart';
+
 final GetIt injector = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -21,6 +23,7 @@ Future<void> initDependencies() async {
 
   injector.registerFactory(() => NoteBloc(injector(), injector()));
   injector.registerFactory(() => SettingsCubit(injector()));
+  injector.registerFactory(() => SearchCubit());
 
   injector.registerLazySingleton(() => NotesRepository(injector()));
   injector.registerLazySingleton(() => SettingsRepository(injector()));

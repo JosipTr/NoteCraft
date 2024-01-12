@@ -88,3 +88,12 @@ class NoteRestored extends NoteEvent {
 class NoteDeleteAllRequested extends NoteEvent {
   const NoteDeleteAllRequested();
 }
+
+class NoteSearched extends NoteEvent {
+  final String text;
+
+  const NoteSearched(this.text);
+
+  @override
+  List<Object> get props => [text];
+}
