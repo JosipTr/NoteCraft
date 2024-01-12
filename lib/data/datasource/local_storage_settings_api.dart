@@ -13,6 +13,6 @@ class LocalStorageSettingsApi implements SettingsApi {
 
   @override
   String getSortType() {
-    return _pref.getString("sort")!;
+    return _pref.getString("sort") ?? 'titleAsc';
   }
 }

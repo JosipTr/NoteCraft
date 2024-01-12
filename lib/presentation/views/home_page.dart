@@ -14,10 +14,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<NoteBloc>(
-          create: (_) =>
-              injector()..add(const NoteGetRequested(NoteFilter.main)),
-        ),
         BlocProvider<SettingsCubit>(
           create: (context) => injector(),
         ),
