@@ -34,6 +34,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     emit(NoteLoadInProgress());
     final sortType = _settingsRepository.getSortType();
     await emit.forEach(_notesRepository.getNotes(), onData: (notes) {
+      sortNotes(notes, sortType);
       if (event.noteFilter == NoteFilter.favorite) {
         return NoteLoadSuccess(notes.where((note) => note.isFavorite).toList(),
             NoteFilter.favorite);
@@ -42,8 +43,6 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         return NoteLoadSuccess(
             notes.where((note) => note.isDeleted).toList(), NoteFilter.trash);
       }
-
-      sortNotes(notes, sortType);
 
       return NoteLoadSuccess(
           notes
