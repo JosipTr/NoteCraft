@@ -17,7 +17,13 @@ class NoteListEmpty extends StatelessWidget {
               'assets/images/empty_trash.png',
               width: 150,
             ),
-            const Text('Your trash is empty!')
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'Your trash is empty!',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            )
           ],
         ),
       );
@@ -30,7 +36,13 @@ class NoteListEmpty extends StatelessWidget {
               'assets/images/favorite_note.png',
               width: 150,
             ),
-            const Text('You have no favorite notes!')
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'You have no favorite notes!',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            )
           ],
         ),
       );
@@ -43,7 +55,13 @@ class NoteListEmpty extends StatelessWidget {
             'assets/images/no_notes.png',
             width: 150,
           ),
-          const Text('You have no notes!')
+          const SizedBox(
+            height: 20,
+          ),
+          const Text(
+            'You have no notes!',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          )
         ],
       ),
     );
