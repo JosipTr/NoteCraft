@@ -72,7 +72,6 @@ class EditNoteView extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: descriptionController,
-                  maxLength: 255,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
                   textCapitalization: TextCapitalization.sentences,

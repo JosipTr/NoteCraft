@@ -87,7 +87,6 @@ class AddNoteView extends StatelessWidget {
                 child: TextField(
                   maxLines: null,
                   controller: descriptionController,
-                  maxLength: 255,
                   keyboardType: TextInputType.multiline,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: const InputDecoration(
