@@ -35,6 +35,7 @@ flutter:
     - assets/images/empty_trash.png
     - assets/images/favorite_note.png
     - assets/images/logo.png
+    - assets/images/logo-nobg.png
 
 flutter_native_splash:
   image: "assets/images/logo.png"

@@ -13,11 +13,21 @@ class Menu extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const SizedBox(
-            height: 100,
+          SizedBox(
+            height: 150,
             child: DrawerHeader(
-              decoration: BoxDecoration(),
-              child: Text('NoteCraft'),
+              decoration: const BoxDecoration(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/images/logo-nobg.png',
+                    height: 100,
+                    width: 100,
+                  ),
+                  const Text('NoteCraft'),
+                ],
+              ),
             ),
           ),
           ListTile(
