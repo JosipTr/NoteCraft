@@ -10,10 +10,12 @@ class LocalStorageNotesApi implements NotesApi {
 
   @override
   Stream<List<NoteModel>> getNotes() {
-    return _appDatabase.select(_appDatabase.noteItems).watch().map((noteList) =>
-        noteList
+    final noteModelStreamList = (_appDatabase.select(_appDatabase.noteItems))
+        .watch()
+        .map((noteItemList) => noteItemList
             .map((noteItem) => NoteModel.fromJson(noteItem.toJson()))
             .toList());
+    return noteModelStreamList;
   }
 
   @override

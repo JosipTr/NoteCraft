@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notecraft/di/injector.dart';
 import 'package:notecraft/domain/entities/note_filter.dart';
+import 'package:notecraft/domain/entities/sort_filter.dart';
+import 'package:notecraft/presentation/cubit/settings_cubit/settings_cubit.dart';
 
 import '../bloc/note_bloc.dart';
 import '../widgets/widgets.dart';
@@ -12,8 +14,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<NoteBloc>(
-      create: (_) => injector()..add(const NoteGetRequested(NoteFilter.main)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NoteBloc>(
+          create: (_) =>
+              injector()..add(const NoteGetRequested(NoteFilter.main)),
+        ),
+        BlocProvider<SettingsCubit>(
+          create: (context) => injector(),
+        ),
+      ],
       child: const HomeView(),
     );
   }
@@ -34,6 +44,83 @@ class HomeView extends StatelessWidget {
             },
           ),
           actions: [
+            PopupMenuButton(
+              icon: const Icon(Icons.sort),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Title'),
+                      Icon(Icons.arrow_upward),
+                    ],
+                  ),
+                  onTap: () {
+                    context
+                        .read<SettingsCubit>()
+                        .setSortType(SortFilter.titleAsc);
+
+                    context.read<NoteBloc>().add(NoteGetRequested(
+                        (context.read<NoteBloc>().state as NoteLoadSuccess)
+                            .noteFilter));
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Title'),
+                      Icon(Icons.arrow_downward),
+                    ],
+                  ),
+                  onTap: () {
+                    context
+                        .read<SettingsCubit>()
+                        .setSortType(SortFilter.titleDesc);
+
+                    context.read<NoteBloc>().add(NoteGetRequested(
+                        (context.read<NoteBloc>().state as NoteLoadSuccess)
+                            .noteFilter));
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Date'),
+                      Icon(Icons.arrow_upward),
+                    ],
+                  ),
+                  onTap: () {
+                    context
+                        .read<SettingsCubit>()
+                        .setSortType(SortFilter.dateAsc);
+
+                    context.read<NoteBloc>().add(NoteGetRequested(
+                        (context.read<NoteBloc>().state as NoteLoadSuccess)
+                            .noteFilter));
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Date'),
+                      Icon(Icons.arrow_downward),
+                    ],
+                  ),
+                  onTap: () {
+                    context
+                        .read<SettingsCubit>()
+                        .setSortType(SortFilter.dateDesc);
+
+                    context.read<NoteBloc>().add(NoteGetRequested(
+                        (context.read<NoteBloc>().state as NoteLoadSuccess)
+                            .noteFilter));
+                  },
+                ),
+              ],
+            ),
             BlocBuilder<NoteBloc, NoteState>(
               builder: (context, state) {
                 if (state is NoteLoadSuccess) {

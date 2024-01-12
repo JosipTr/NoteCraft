@@ -28,7 +28,7 @@ class NoteList extends StatelessWidget {
                 Text(
                   formatDate(
                     DateTime.fromMillisecondsSinceEpoch(notes[index].date),
-                    [dd, '-', mm, '-', yyyy, ' ', hh, ":", nn, ":", ss],
+                    [dd, '-', mm, '-', yyyy, ' ', HH, ":", nn, ":", ss],
                   ),
                   maxLines: 1,
                 ),
@@ -88,9 +88,11 @@ class NoteIconButton extends StatelessWidget {
           )
         : notes[index].isFavorite
             ? IconButton(
-                onPressed: () => context.read<NoteBloc>().add(
-                      NoteFavoriteToggled(notes[index].id!),
-                    ),
+                onPressed: () {
+                  context.read<NoteBloc>().add(
+                        NoteFavoriteToggled(notes[index].id!),
+                      );
+                },
                 icon: const Icon(Icons.star),
               )
             : IconButton(

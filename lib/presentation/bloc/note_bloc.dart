@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:notecraft/domain/repositories/notes_repository.dart';
+import 'package:notecraft/domain/repositories/settings_repository.dart';
+import 'package:notecraft/utils/functions/sort_notes.dart';
 
 import '../../data/models/models.dart';
 import '../../domain/entities/note.dart';
@@ -12,8 +14,10 @@ part 'note_state.dart';
 
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final NotesRepository _notesRepository;
+  final SettingsRepository _settingsRepository;
 
-  NoteBloc(this._notesRepository) : super(NoteInitial()) {
+  NoteBloc(this._notesRepository, this._settingsRepository)
+      : super(NoteInitial()) {
     on<NoteGetRequested>(_onNoteGetRequested);
     on<NoteAdded>(_onNoteAdded);
     on<NoteDeleted>(_onNoteDeleted);
@@ -28,6 +32,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Future<void> _onNoteGetRequested(
       NoteGetRequested event, Emitter<NoteState> emit) async {
     emit(NoteLoadInProgress());
+    final sortType = _settingsRepository.getSortType();
     await emit.forEach(_notesRepository.getNotes(), onData: (notes) {
       if (event.noteFilter == NoteFilter.favorite) {
         return NoteLoadSuccess(notes.where((note) => note.isFavorite).toList(),
@@ -37,6 +42,9 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         return NoteLoadSuccess(
             notes.where((note) => note.isDeleted).toList(), NoteFilter.trash);
       }
+
+      sortNotes(notes, sortType);
+
       return NoteLoadSuccess(
           notes
               .map((note) => note.copyWith(isSelected: false))
