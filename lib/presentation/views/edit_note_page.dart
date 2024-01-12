@@ -64,7 +64,7 @@ class EditNoteView extends StatelessWidget {
               TextField(
                 maxLength: 32,
                 controller: titleController,
-                textCapitalization: TextCapitalization.words,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
                   label: Text("Title: "),
                 ),
@@ -73,8 +73,9 @@ class EditNoteView extends StatelessWidget {
                 child: TextField(
                   controller: descriptionController,
                   maxLength: 255,
+                  maxLines: null,
                   keyboardType: TextInputType.multiline,
-                  textCapitalization: TextCapitalization.words,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration: const InputDecoration(
                     label: Text("Description: "),
                     border: InputBorder.none,

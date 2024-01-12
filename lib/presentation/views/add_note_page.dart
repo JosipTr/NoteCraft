@@ -77,7 +77,7 @@ class AddNoteView extends StatelessWidget {
               TextField(
                 maxLength: 32,
                 controller: titleController,
-                textCapitalization: TextCapitalization.words,
+                textCapitalization: TextCapitalization.sentences,
                 autofocus: true,
                 decoration: const InputDecoration(
                   label: Text("Title: "),
@@ -85,10 +85,11 @@ class AddNoteView extends StatelessWidget {
               ),
               Expanded(
                 child: TextField(
+                  maxLines: null,
                   controller: descriptionController,
                   maxLength: 255,
                   keyboardType: TextInputType.multiline,
-                  textCapitalization: TextCapitalization.words,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration: const InputDecoration(
                     label: Text("Description: "),
                     border: InputBorder.none,
