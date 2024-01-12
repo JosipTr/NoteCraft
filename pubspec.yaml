@@ -29,3 +29,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/no_notes.png
+    - assets/images/empty_trash.png
+    - assets/images/favorite_note.png

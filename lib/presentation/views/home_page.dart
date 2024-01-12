@@ -42,7 +42,9 @@ class HomeView extends StatelessWidget {
         body: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
             if (state is NoteLoadSuccess) {
-              if (state.notes.isEmpty) return const NoteListEmpty();
+              if (state.notes.isEmpty) {
+                return NoteListEmpty(noteFilter: state.noteFilter);
+              }
               return NoteList(
                 notes: state.notes,
                 noteFilter: state.noteFilter,
