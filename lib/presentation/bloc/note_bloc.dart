@@ -28,6 +28,8 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     on<NoteDeleteAllRequested>(_onNoteDeleteAllRequested);
     on<NoteRestored>(_onNoteRestored);
     on<NoteSearched>(_onNoteSearched);
+    on<NoteExported>(_onNoteExported);
+    on<NoteImported>(_onNoteImported);
   }
 
   Future<void> _onNoteGetRequested(
@@ -136,5 +138,15 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
       emit(NoteLoadSuccess(filteredNotes, filter));
     }
+  }
+
+  Future<void> _onNoteExported(
+      NoteExported event, Emitter<NoteState> emit) async {
+    await _notesRepository.exportNotes(event.notes);
+  }
+
+  Future<void> _onNoteImported(
+      NoteImported event, Emitter<NoteState> emit) async {
+    await _notesRepository.importNotes();
   }
 }

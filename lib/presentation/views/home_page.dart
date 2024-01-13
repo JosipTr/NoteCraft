@@ -4,6 +4,7 @@ import 'package:notecraft/di/injector.dart';
 import 'package:notecraft/presentation/cubit/settings_cubit/settings_cubit.dart';
 
 import '../bloc/note_bloc.dart';
+import '../cubit/backup_cubit/backup_cubit.dart';
 import '../cubit/search_cubit/search_cubit.dart';
 import '../widgets/widgets.dart';
 
@@ -19,6 +20,9 @@ class HomePage extends StatelessWidget {
         ),
         BlocProvider<SearchCubit>(
           create: (context) => injector(),
+        ),
+        BlocProvider<BackupCubit>(
+          create: (_) => injector(),
         ),
       ],
       child: const HomeView(),

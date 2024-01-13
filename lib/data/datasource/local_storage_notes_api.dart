@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:notecraft/data/repositories/notes_api.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../models/models.dart';
 
@@ -92,5 +97,40 @@ class LocalStorageNotesApi implements NotesApi {
     //         .map((noteItem) => NoteModel.fromJson(noteItem.toJson()))
     //         .toList());
     // return noteModelStreamList;
+  }
+
+  @override
+  Future<void> exportNotes(List<NoteModel> notes) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+    final file = File('$path/notes.txt');
+    final jsonNotes = notes.map((noteModel) => noteModel.toJson()).toList();
+    await file.writeAsString(jsonEncode(jsonNotes));
+  }
+
+  @override
+  Future<void> importNotes() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final path = directory.path;
+      final file = File('$path/notes.txt');
+      final contents = await file.readAsString();
+      final jsonNotes = json.decode(contents) as List;
+      final notes = jsonNotes.map((note) => NoteModel.fromJson(note)).toList();
+      await _appDatabase.delete(_appDatabase.noteItems).go();
+      for (final note in notes) {
+        await _appDatabase.into(_appDatabase.noteItems).insert(
+              NoteItemsCompanion.insert(
+                title: note.title,
+                description: note.description,
+                date: DateTime.fromMillisecondsSinceEpoch(note.date),
+                deleted: Value(note.isDeleted),
+                favorite: Value(note.isFavorite),
+              ),
+            );
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }
