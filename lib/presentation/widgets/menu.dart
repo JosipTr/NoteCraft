@@ -1,8 +1,7 @@
-import 'package:filesystem_picker/filesystem_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notecraft/presentation/bloc/note_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Menu extends StatelessWidget {
   const Menu({
@@ -112,30 +111,20 @@ class Menu extends StatelessWidget {
 }
 
 Future<void> exportNotes(BuildContext context, NoteBloc noteBloc) async {
+  String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+  noteBloc.add(NoteExported(
+      (noteBloc.state as NoteLoadSuccess).notes, selectedDirectory!));
   if (context.mounted) {
-    String? path = await FilesystemPicker.open(
-      title: 'Save',
-      context: context,
-      rootDirectory: await getExternalStorageDirectory(),
-      fsType: FilesystemType.folder,
-      pickText: 'Save file to this folder',
-    );
-    noteBloc
-        .add(NoteExported((noteBloc.state as NoteLoadSuccess).notes, path!));
-    if (context.mounted) {
-      Navigator.pop(context);
-    }
+    Navigator.pop(context);
   }
 }
 
 Future<void> importNotes(BuildContext context, NoteBloc noteBloc) async {
-  if (context.mounted) {
-    String? path = await FilesystemPicker.open(
-        title: 'Open file',
-        context: context,
-        rootDirectory: await getExternalStorageDirectory(),
-        fsType: FilesystemType.file,
-        fileTileSelectMode: FileTileSelectMode.wholeTile);
+  FilePickerResult? result = await FilePicker.platform
+      .pickFiles(type: FileType.custom, allowedExtensions: ['txt']);
+
+  if (result != null) {
+    final path = result.paths.first;
     noteBloc.add(NoteImported(path!));
     if (context.mounted) {
       Navigator.pop(context);
