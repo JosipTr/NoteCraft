@@ -12,7 +12,6 @@ dependencies:
   drift: ^2.14.1
   equatable: ^2.0.5
   file_picker: ^6.1.1
-  filesystem_picker: ^4.1.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
