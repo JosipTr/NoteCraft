@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notecraft/presentation/bloc/note_bloc.dart';
-import 'package:notecraft/presentation/cubit/backup_cubit/backup_cubit.dart';
 
 class Menu extends StatelessWidget {
   const Menu({
@@ -10,7 +9,6 @@ class Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backupCubit = BlocProvider.of<BackupCubit>(context);
     final noteBloc = BlocProvider.of<NoteBloc>(context);
     return Drawer(
       child: ListView(
@@ -80,7 +78,7 @@ class Menu extends StatelessWidget {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                backupCubit.importNotes();
+                                noteBloc.add(const NoteImported());
                                 Navigator.pop(context);
                               },
                               child: const Text('Import'),
@@ -91,8 +89,8 @@ class Menu extends StatelessWidget {
                                 //         .read<NoteBloc>()
                                 //         .state as NoteLoadSuccess)
                                 //     .notes);
-                                backupCubit.exportNotes(
-                                    (noteBloc.state as NoteLoadSuccess).notes);
+                                noteBloc.add(NoteExported(
+                                    (noteBloc.state as NoteLoadSuccess).notes));
                                 Navigator.pop(context);
                               },
                               child: const Text('Export'),
