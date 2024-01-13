@@ -16,8 +16,8 @@ NoteCraft is a simple Flutter application for taking and saving notes. This appl
 
 ## Image Credits
 
-- [Trash icons](https://www.flaticon.com/free-icons/trash) created by Freepik - Flaticon
-- [Ui icons](https://www.flaticon.com/free-icons/ui) created by Freepik - Flaticon
-- [Paper icons](https://www.flaticon.com/free-icons/paper) created by Pixel perfect - Flaticon
+- [Trash icon](https://www.flaticon.com/free-icons/trash) created by Freepik - Flaticon
+- [Ui icon](https://www.flaticon.com/free-icons/ui) created by Freepik - Flaticon
+- [Paper icon](https://www.flaticon.com/free-icons/paper) created by Pixel perfect - Flaticon
 
 Feel free to customize the content based on your application's specific features, and replace the author information with your own details.
