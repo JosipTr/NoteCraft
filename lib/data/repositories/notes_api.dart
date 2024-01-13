@@ -10,6 +10,6 @@ abstract interface class NotesApi {
   Future<void> updateNote(NoteModel noteModel);
   Future<void> deleteAllNotes();
   Future<List<NoteModel>> searchNotes(String text);
-  Future<void> exportNotes(List<NoteModel> notes);
-  Future<void> importNotes();
+  Future<void> exportNotes(List<NoteModel> notes, String path);
+  Future<void> importNotes(String path);
 }

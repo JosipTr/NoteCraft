@@ -21,10 +21,10 @@ class NotesRepository {
   Future<List<NoteModel>> searchNotes(String text) =>
       _notesApi.searchNotes(text);
 
-  Future<void> importNotes() => _notesApi.importNotes();
-  Future<void> exportNotes(List<Note> notes) {
+  Future<void> importNotes(String path) => _notesApi.importNotes(path);
+  Future<void> exportNotes(List<Note> notes, String path) {
     final noteModelList =
         notes.map((note) => NoteModel.fromNote(note)).toList();
-    return _notesApi.exportNotes(noteModelList);
+    return _notesApi.exportNotes(noteModelList, path);
   }
 }

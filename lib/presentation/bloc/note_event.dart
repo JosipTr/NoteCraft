@@ -100,12 +100,17 @@ class NoteSearched extends NoteEvent {
 
 class NoteExported extends NoteEvent {
   final List<Note> notes;
-  const NoteExported(this.notes);
+  final String path;
+  const NoteExported(this.notes, this.path);
 
   @override
-  List<Object> get props => [notes];
+  List<Object> get props => [notes, path];
 }
 
 class NoteImported extends NoteEvent {
-  const NoteImported();
+  final String path;
+  const NoteImported(this.path);
+
+  @override
+  List<Object> get props => [path];
 }

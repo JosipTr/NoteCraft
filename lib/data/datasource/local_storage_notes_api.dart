@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:notecraft/data/repositories/notes_api.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../models/models.dart';
 
@@ -100,20 +99,20 @@ class LocalStorageNotesApi implements NotesApi {
   }
 
   @override
-  Future<void> exportNotes(List<NoteModel> notes) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
+  Future<void> exportNotes(List<NoteModel> notes, String path) async {
+    // final directory = await getApplicationDocumentsDirectory();
+    // final path = directory.path;
     final file = File('$path/notes.txt');
     final jsonNotes = notes.map((noteModel) => noteModel.toJson()).toList();
     await file.writeAsString(jsonEncode(jsonNotes));
   }
 
   @override
-  Future<void> importNotes() async {
+  Future<void> importNotes(String path) async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final path = directory.path;
-      final file = File('$path/notes.txt');
+      // final directory = await getApplicationDocumentsDirectory();
+      // final path = directory.path;
+      final file = File(path);
       final contents = await file.readAsString();
       final jsonNotes = json.decode(contents) as List;
       final notes = jsonNotes.map((note) => NoteModel.fromJson(note)).toList();

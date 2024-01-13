@@ -142,11 +142,11 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Future<void> _onNoteExported(
       NoteExported event, Emitter<NoteState> emit) async {
-    await _notesRepository.exportNotes(event.notes);
+    await _notesRepository.exportNotes(event.notes, event.path);
   }
 
   Future<void> _onNoteImported(
       NoteImported event, Emitter<NoteState> emit) async {
-    await _notesRepository.importNotes();
+    await _notesRepository.importNotes(event.path);
   }
 }
